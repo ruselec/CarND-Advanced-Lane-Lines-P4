@@ -25,8 +25,9 @@ The goals / steps of this project are the following:
 [image10]: ./examples/binary_combo_example8.png "Binary Example"
 [image11]: ./examples/warped_straight_lines.png "Warp Example"
 [image12]: ./examples/color_fit_lines.png "Fit Visual"
-[image13]: ./examples/example_output.png "Output"
-[video1]: ./project_video.mp4 "Video"
+[image13]: ./examples/formula.png "Formula"
+[image14]: ./examples/example_output.png "Output"
+[video1]: ./project_video_out.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
@@ -48,6 +49,7 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 #### 1. Provide an example of a distortion-corrected image.
 
 Using the parameters from above, I applied the distortion correction on a raw image. The code for the distortion correction is contained in the third code cell of the IPython notebook.
+
 ![alt text][image2]
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
@@ -88,19 +90,36 @@ Here is an example of a transformed image:
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+The code for my identifing lane-line pixels includes a function called `window()`, which appears in the 8th code cell of the IPython notebook. To detect the lanes I calculated a histogram and used argmax to determine two peaks - one peak left of the midpoint and one peak right of the midpoint. Then I use sliding window method to find coordinates of pixels for left and right lines. After that I use np.polyfit to approximate each line by function of second order. Finally, I used a function 'gen_polygon', which appears in the 11th code cell of the IPython notebook and uses cv2.fillPoly to draw the lane on blank image. 
 
 ![alt text][image12]
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+The code for my calculation of the radius of curvature of the lane and the position of the vehicle includes functions called `calc_curvature()` and `calc_offset()`, which appears in the 12th code cell of the IPython notebook. The pixel values of the lane are scaled into meters using the scaling factors defined as follows:
+
+```
+ym_per_pix = 30.0/720 # meters per pixel in y dimension
+xm_per_pix = 3.7/700 # meters per pixel in x dimension
+```
+
+Then I used this forumla to calculate the estimated radius of each lines:
+
+![alt text][image13]
+
+To calculate the position of the vehicle, I assume the camera is mounted at the center of the car and the deviation of the midpoint of the lane from the center of the image is the offset. 
+
+```
+middle = (left_fitx[-1] + right_fitx[-1])//2
+veh_pos = image.shape[1]/2
+offset = (veh_pos - middle)*xm_per_pix
+```
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+I implemented this step in the 13th code cell of the IPython notebook. To plot back down the lane area I used a function 'perspective_unwarp()', which defined in the 5th code cell of the IPython notebook, and a function`cv2.addWeighted()`. To output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position, I used a function 'show_info()', which defined in the 14th code cell of the IPython notebook. Here is an example of my result on a test image:
 
-![alt text][image13]
+![alt text][image14]
 
 ---
 
@@ -108,7 +127,7 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./project_video_out.mp4)
 
 ---
 
@@ -116,5 +135,11 @@ Here's a [link to my video result](./project_video.mp4)
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+My pipeline works well for the first video but fails on the second and third videos.
+I've found that color filters are better than gradient methods for the first video. But for the second challenge video they are not working because of the part of lines has another colors than yellow and white. To make the algorithm more robust I think to combine these two group of methods. The third video has different brightness for frames so I think first use histogram equaliztion and then apply color filters to find lines. 
+Another things that I would like to implement are:
+* defining of the confidence for each line  
+* use previous frame to define region of interest
+* outlier rejection
+* low-pass filter to smooth the lane detection over frames
 
