@@ -117,7 +117,7 @@ offset = (veh_pos - middle)*xm_per_pix
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in the 13th code cell of the IPython notebook. To plot back down the lane area I used a function 'perspective_unwarp()', which defined in the 5th code cell of the IPython notebook, and a function`cv2.addWeighted()`. To output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position, I used a function 'show_info()', which defined in the 14th code cell of the IPython notebook. Here is an example of my result on a test image:
+I implemented this step in the 13th code cell of the IPython notebook. To plot back down the lane area I used a function `perspective_unwarp()`, which defined in the 5th code cell of the IPython notebook, and a function`cv2.addWeighted()`. To output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position, I used a function `show_info()`, which defined in the 14th code cell of the IPython notebook. Here is an example of my result on a test image:
 
 ![alt text][image14]
 
