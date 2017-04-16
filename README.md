@@ -90,7 +90,7 @@ Here is an example of a transformed image:
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-The code for my identifing lane-line pixels includes a function called `window()`, which appears in the 8th code cell of the IPython notebook. To detect the lanes I calculated a histogram and used argmax to determine two peaks - one peak left of the midpoint and one peak right of the midpoint. Then I use sliding window method to find coordinates of pixels for left and right lines. After that I use np.polyfit to approximate each line by function of second order. Finally, I used a function 'gen_polygon', which appears in the 11th code cell of the IPython notebook and uses cv2.fillPoly to draw the lane on blank image. 
+The code for my identifing lane-line pixels includes a function called `window()`, which appears in the 8th code cell of the IPython notebook. To detect the lanes I calculated a histogram and used argmax to determine two peaks - one peak left of the midpoint and one peak right of the midpoint. Then I use sliding window method to find coordinates of pixels for left and right lines. After that I use np.polyfit to approximate each line by function of second order. Finally, I used a function `gen_polygon()`, which appears in the 11th code cell of the IPython notebook and uses cv2.fillPoly to draw the lane on blank image. 
 
 ![alt text][image12]
 
